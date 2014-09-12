@@ -1,2 +1,2 @@
-This is a Java project template for the Luna version of Eclipse JDT and
-Eclipse m2e. It also enables the FindBugs builder.
+**fragag-commons** is a collection of general-purpose utility Java classes
+developed by [FraGag](https://github.com/FraGag).
