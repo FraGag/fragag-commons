@@ -82,6 +82,38 @@ final class DocumentImmutableTreeList extends AbstractImmutableTreeList<char[], 
             }
         }
 
+        static void setCurrentPositionInDocumentReader(@Nonnull DocumentReader reader, @Nonnull Node node, int position) {
+            int chunkIndex = 0;
+            int chunkStartPosition = 0;
+            for (;;) {
+                final Node left = node.getLeft();
+                if (left != null) {
+                    if (position < left.textLength) {
+                        node = left;
+                        continue;
+                    }
+
+                    chunkIndex += left.getSize();
+                    chunkStartPosition += left.textLength;
+                    position -= left.textLength;
+                }
+
+                final char[] value = node.getValue();
+                assert value != null;
+                final int chunkSize = value.length;
+                if (position <= chunkSize) {
+                    reader.setCurrentPosition(chunkIndex, chunkStartPosition, position);
+                    break;
+                }
+
+                chunkIndex++;
+                chunkStartPosition += chunkSize;
+                position -= chunkSize;
+                node = node.getRight();
+                assert node != null;
+            }
+        }
+
         private final transient int textLength;
 
         protected Node(@CheckForNull Node left, @Nonnull char[] value, @CheckForNull Node right) {
@@ -108,6 +140,15 @@ final class DocumentImmutableTreeList extends AbstractImmutableTreeList<char[], 
         }
 
         return Node.charAt(root, index);
+    }
+
+    final void setCurrentPositionInDocumentReader(@Nonnull DocumentReader reader, int position) {
+        Node node = this.getRoot();
+        if (node == null) {
+            reader.setCurrentPosition(0, 0, position);
+        } else {
+            Node.setCurrentPositionInDocumentReader(reader, node, position);
+        }
     }
 
     final int textLength() {
