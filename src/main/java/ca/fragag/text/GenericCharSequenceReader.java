@@ -1,7 +1,5 @@
 package ca.fragag.text;
 
-import java.util.NoSuchElementException;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -61,15 +59,6 @@ public final class GenericCharSequenceReader extends CharSequenceReader<CharSequ
     @Override
     public final CharSequence getCharSequence() {
         return this.charSequence;
-    }
-
-    @Override
-    public final char getCurrentChar() {
-        if (this.atEnd()) {
-            throw new NoSuchElementException();
-        }
-
-        return this.charSequence.charAt(this.current);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package ca.fragag.text;
 
-import java.util.NoSuchElementException;
-
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
@@ -78,19 +76,9 @@ public final class DocumentReader extends CharSequenceReader<Document> {
         this.readNextCodePoint();
     }
 
-    @Nonnull
     @Override
     public final Document getCharSequence() {
         return this.document;
-    }
-
-    @Override
-    public final char getCurrentChar() {
-        if (this.atEnd()) {
-            throw new NoSuchElementException();
-        }
-
-        return this.currentChar;
     }
 
     @Override
@@ -122,7 +110,6 @@ public final class DocumentReader extends CharSequenceReader<Document> {
         this.readPreviousCodePoint();
     }
 
-    @Nonnull
     @Override
     protected final String readSubstringCore(int length) {
         if (this.atEnd()) {

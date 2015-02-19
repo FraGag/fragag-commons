@@ -1,7 +1,5 @@
 package ca.fragag.text;
 
-import java.util.NoSuchElementException;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -53,20 +51,9 @@ public final class RangedCharSequenceReader extends CharSequenceReader<SubSequen
         }
     }
 
-    @Nonnull
     @Override
     public final SubSequence getCharSequence() {
         return new SubSequence(this.reader.getCharSequence(), this.start, this.end);
-    }
-
-    @Override
-    public final char getCurrentChar() {
-        final int readerPosition = this.reader.getCurrentPosition();
-        if (readerPosition < this.start || readerPosition >= this.end) {
-            throw new NoSuchElementException();
-        }
-
-        return this.reader.getCurrentChar();
     }
 
     @Override

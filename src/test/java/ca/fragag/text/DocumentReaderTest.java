@@ -15,8 +15,8 @@ public class DocumentReaderTest extends CharSequenceReaderContract {
 
     /**
      * Asserts that, following a call to {@link CharSequenceReader#advance()} that crosses a chunk boundary in the {@link Document},
-     * {@link CharSequenceReader#getCurrentPosition()}, {@link CharSequenceReader#getCurrentChar()} and
-     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values.
+     * {@link CharSequenceReader#getCurrentPosition()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct
+     * values.
      */
     @Test
     public void advanceNextChunk() {
@@ -28,23 +28,20 @@ public class DocumentReaderTest extends CharSequenceReaderContract {
         final Document document = new Document(text);
         final DocumentReader reader = new DocumentReader(document, Document.CHUNK_SIZE - 1);
         assertThat(reader.getCurrentPosition(), is(Document.CHUNK_SIZE - 1));
-        assertThat(reader.getCurrentChar(), is('a'));
         assertThat(reader.getCurrentCodePoint(), is(0x61));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(Document.CHUNK_SIZE));
-        assertThat(reader.getCurrentChar(), is('b'));
         assertThat(reader.getCurrentCodePoint(), is(0x62));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(Document.CHUNK_SIZE + 1));
-        assertThat(reader.getCurrentChar(), is('c'));
         assertThat(reader.getCurrentCodePoint(), is(0x63));
     }
 
     /**
      * Positions a {@link Document} on a chunk, calls {@link CharSequenceReader#advance()} to read a code point from the next chunk,
      * then calls {@link CharSequenceReader#rewind()} to read back the code point from the previous chunk, and asserts that
-     * {@link CharSequenceReader#getCurrentPosition()}, {@link CharSequenceReader#getCurrentChar()} and
-     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values.
+     * {@link CharSequenceReader#getCurrentPosition()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct
+     * values.
      */
     @Test
     public void advanceRewindAcrossChunks() {
@@ -55,15 +52,12 @@ public class DocumentReaderTest extends CharSequenceReaderContract {
         final Document document = new Document(text);
         final DocumentReader reader = new DocumentReader(document, Document.CHUNK_SIZE - 1);
         assertThat(reader.getCurrentPosition(), is(Document.CHUNK_SIZE - 1));
-        assertThat(reader.getCurrentChar(), is('a'));
         assertThat(reader.getCurrentCodePoint(), is(0x61));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(Document.CHUNK_SIZE));
-        assertThat(reader.getCurrentChar(), is('b'));
         assertThat(reader.getCurrentCodePoint(), is(0x62));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(Document.CHUNK_SIZE - 1));
-        assertThat(reader.getCurrentChar(), is('a'));
         assertThat(reader.getCurrentCodePoint(), is(0x61));
     }
 
@@ -98,8 +92,8 @@ public class DocumentReaderTest extends CharSequenceReaderContract {
     /**
      * Positions a {@link Document} on a chunk, calls {@link CharSequenceReader#rewind()} to read a code point from the previous
      * chunk, then calls {@link CharSequenceReader#advance()} to read back the code point from the next chunk, and asserts that
-     * {@link CharSequenceReader#getCurrentPosition()}, {@link CharSequenceReader#getCurrentChar()} and
-     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values.
+     * {@link CharSequenceReader#getCurrentPosition()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct
+     * values.
      */
     @Test
     public void rewindAdvanceAcrossChunks() {
@@ -110,22 +104,19 @@ public class DocumentReaderTest extends CharSequenceReaderContract {
         final Document document = new Document(text);
         final DocumentReader reader = new DocumentReader(document, Document.CHUNK_SIZE);
         assertThat(reader.getCurrentPosition(), is(Document.CHUNK_SIZE));
-        assertThat(reader.getCurrentChar(), is('b'));
         assertThat(reader.getCurrentCodePoint(), is(0x62));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(Document.CHUNK_SIZE - 1));
-        assertThat(reader.getCurrentChar(), is('a'));
         assertThat(reader.getCurrentCodePoint(), is(0x61));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(Document.CHUNK_SIZE));
-        assertThat(reader.getCurrentChar(), is('b'));
         assertThat(reader.getCurrentCodePoint(), is(0x62));
     }
 
     /**
      * Asserts that, following a call to {@link CharSequenceReader#rewind()} that crosses a chunk boundary in the {@link Document},
-     * {@link CharSequenceReader#getCurrentPosition()}, {@link CharSequenceReader#getCurrentChar()} and
-     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values.
+     * {@link CharSequenceReader#getCurrentPosition()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct
+     * values.
      */
     @Test
     public void rewindPreviousChunk() {
@@ -137,15 +128,12 @@ public class DocumentReaderTest extends CharSequenceReaderContract {
         final Document document = new Document(text);
         final DocumentReader reader = new DocumentReader(document, Document.CHUNK_SIZE + 1);
         assertThat(reader.getCurrentPosition(), is(Document.CHUNK_SIZE + 1));
-        assertThat(reader.getCurrentChar(), is('c'));
         assertThat(reader.getCurrentCodePoint(), is(0x63));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(Document.CHUNK_SIZE));
-        assertThat(reader.getCurrentChar(), is('b'));
         assertThat(reader.getCurrentCodePoint(), is(0x62));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(Document.CHUNK_SIZE - 1));
-        assertThat(reader.getCurrentChar(), is('a'));
         assertThat(reader.getCurrentCodePoint(), is(0x61));
     }
 
@@ -172,7 +160,6 @@ public class DocumentReaderTest extends CharSequenceReaderContract {
         final DocumentReader reader = new DocumentReader(document);
         reader.setCurrentPosition(Document.CHUNK_SIZE + 1);
         assertThat(reader.getCurrentPosition(), is(Document.CHUNK_SIZE + 1));
-        assertThat(reader.getCurrentChar(), is('a'));
         assertThat(reader.getCurrentCodePoint(), is(0x61));
     }
 
@@ -188,7 +175,6 @@ public class DocumentReaderTest extends CharSequenceReaderContract {
         final DocumentReader reader = new DocumentReader(document, Document.CHUNK_SIZE);
         reader.setCurrentPosition(0);
         assertThat(reader.getCurrentPosition(), is(0));
-        assertThat(reader.getCurrentChar(), is('a'));
         assertThat(reader.getCurrentCodePoint(), is(0x61));
     }
 

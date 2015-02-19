@@ -1,7 +1,5 @@
 package ca.fragag.text;
 
-import java.util.NoSuchElementException;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -36,15 +34,6 @@ public abstract class CharSequenceReader<CS extends CharSequence> {
      */
     @Nonnull
     public abstract CS getCharSequence();
-
-    /**
-     * Gets the character at this reader's current position.
-     *
-     * @return the character at the current position
-     * @throws NoSuchElementException
-     *             the reader is positioned past the beginning or the end of the {@link CharSequence}
-     */
-    public abstract char getCurrentChar();
 
     /**
      * Gets the code point at this reader's current position.
@@ -96,9 +85,9 @@ public abstract class CharSequenceReader<CS extends CharSequence> {
 
     /**
      * Sets this reader's current position. If the position is in the middle of a surrogate pair, it is <strong>not</strong>
-     * adjusted, so {@link #getCurrentChar()} and {@link #getCurrentCodePoint()} will return incorrect values. This method should be
-     * used with the value returned from {@link #getCurrentPosition()} after series of calls to {@link #advance()} and
-     * {@link #rewind()}, which should be a valid position.
+     * adjusted, so {@link #getCurrentCodePoint()} will return an incorrect value. This method should be used with the value
+     * returned from {@link #getCurrentPosition()} after series of calls to {@link #advance()} and {@link #rewind()}, which should
+     * be a valid position.
      *
      * @param position
      *            the position to set as the current position

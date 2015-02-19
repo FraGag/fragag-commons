@@ -3,7 +3,7 @@ package ca.fragag.text;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.NoSuchElementException;
+import javax.annotation.Nonnull;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,44 +21,37 @@ public abstract class CharSequenceReaderContract {
 
     /**
      * Calls {@link CharSequenceReader#advance()} then {@link CharSequenceReader#rewind()} on a reader that is positioned on the
-     * last code point of a {@link CharSequence} and asserts that {@link CharSequenceReader#getCurrentPosition()},
-     * {@link CharSequenceReader#getCurrentChar()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct values
-     * after each call.
+     * last code point of a {@link CharSequence} and asserts that {@link CharSequenceReader#getCurrentPosition()} and
+     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values after each call.
      */
     @Test
     public void advanceAtEndRewind() {
         final CharSequenceReader<?> reader = this.createCharSequenceReader(BAR, 2);
         assertThat(reader.getCurrentPosition(), is(2));
-        assertThat(reader.getCurrentChar(), is('r'));
         assertThat(reader.getCurrentCodePoint(), is(0x72));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(3));
         assertThat(reader.getCurrentCodePoint(), is(-1));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(2));
-        assertThat(reader.getCurrentChar(), is('r'));
         assertThat(reader.getCurrentCodePoint(), is(0x72));
     }
 
     /**
-     * Asserts that, following a call to {@link CharSequenceReader#advance()}, {@link CharSequenceReader#getCurrentPosition()},
-     * {@link CharSequenceReader#getCurrentChar()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct values.
-     * The test is performed on a {@link CharSequence} containing only BMP code points and calls
-     * {@link CharSequenceReader#advance()} multiple times.
+     * Asserts that, following a call to {@link CharSequenceReader#advance()}, {@link CharSequenceReader#getCurrentPosition()} and
+     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values. The test is performed on a {@link CharSequence}
+     * containing only BMP code points and calls {@link CharSequenceReader#advance()} multiple times.
      */
     @Test
     public void advanceBmp() {
         final CharSequenceReader<?> reader = this.createCharSequenceReader(BAR);
         assertThat(reader.getCurrentPosition(), is(0));
-        assertThat(reader.getCurrentChar(), is('b'));
         assertThat(reader.getCurrentCodePoint(), is(0x62));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(1));
-        assertThat(reader.getCurrentChar(), is('a'));
         assertThat(reader.getCurrentCodePoint(), is(0x61));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(2));
-        assertThat(reader.getCurrentChar(), is('r'));
         assertThat(reader.getCurrentCodePoint(), is(0x72));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(3));
@@ -69,24 +62,21 @@ public abstract class CharSequenceReaderContract {
     }
 
     /**
-     * Asserts that, following a call to {@link CharSequenceReader#advance()}, {@link CharSequenceReader#getCurrentPosition()},
-     * {@link CharSequenceReader#getCurrentChar()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct values.
-     * The test is performed on a {@link CharSequence} containing a high surrogate that is not followed by a low surrogate and calls
-     * {@link CharSequenceReader#advance()} multiple times.
+     * Asserts that, following a call to {@link CharSequenceReader#advance()}, {@link CharSequenceReader#getCurrentPosition()} and
+     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values. The test is performed on a {@link CharSequence}
+     * containing a high surrogate that is not followed by a low surrogate and calls {@link CharSequenceReader#advance()} multiple
+     * times.
      */
     @Test
     public void advanceBrokenSurrogate() {
         final CharSequenceReader<?> reader = this.createCharSequenceReader("x\uD83Cy");
         assertThat(reader.getCurrentPosition(), is(0));
-        assertThat(reader.getCurrentChar(), is('x'));
         assertThat(reader.getCurrentCodePoint(), is(0x78));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(1));
-        assertThat(reader.getCurrentChar(), is('\uD83C'));
         assertThat(reader.getCurrentCodePoint(), is(0xD83C));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(2));
-        assertThat(reader.getCurrentChar(), is('y'));
         assertThat(reader.getCurrentCodePoint(), is(0x79));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(3));
@@ -97,20 +87,17 @@ public abstract class CharSequenceReaderContract {
     }
 
     /**
-     * Asserts that, following a call to {@link CharSequenceReader#advance()}, {@link CharSequenceReader#getCurrentPosition()},
-     * {@link CharSequenceReader#getCurrentChar()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct values.
-     * The test is performed on a {@link CharSequence} containing a high surrogate at the end and calls
-     * {@link CharSequenceReader#advance()} multiple times.
+     * Asserts that, following a call to {@link CharSequenceReader#advance()}, {@link CharSequenceReader#getCurrentPosition()} and
+     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values. The test is performed on a {@link CharSequence}
+     * containing a high surrogate at the end and calls {@link CharSequenceReader#advance()} multiple times.
      */
     @Test
     public void advanceBrokenSurrogateAtEnd() {
         final CharSequenceReader<?> reader = this.createCharSequenceReader("x\uD83C");
         assertThat(reader.getCurrentPosition(), is(0));
-        assertThat(reader.getCurrentChar(), is('x'));
         assertThat(reader.getCurrentCodePoint(), is(0x78));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(1));
-        assertThat(reader.getCurrentChar(), is('\uD83C'));
         assertThat(reader.getCurrentCodePoint(), is(0xD83C));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(2));
@@ -134,24 +121,20 @@ public abstract class CharSequenceReaderContract {
     }
 
     /**
-     * Asserts that, following a call to {@link CharSequenceReader#advance()}, {@link CharSequenceReader#getCurrentPosition()},
-     * {@link CharSequenceReader#getCurrentChar()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct values.
-     * The test is performed on a {@link CharSequence} containing a mix of BMP code points and non-BMP code points and calls
-     * {@link CharSequenceReader#advance()} multiple times.
+     * Asserts that, following a call to {@link CharSequenceReader#advance()}, {@link CharSequenceReader#getCurrentPosition()} and
+     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values. The test is performed on a {@link CharSequence}
+     * containing a mix of BMP code points and non-BMP code points and calls {@link CharSequenceReader#advance()} multiple times.
      */
     @Test
     public void advanceNonBmp() {
         final CharSequenceReader<?> reader = this.createCharSequenceReader("x\uD83C\uDF41y");
         assertThat(reader.getCurrentPosition(), is(0));
-        assertThat(reader.getCurrentChar(), is('x'));
         assertThat(reader.getCurrentCodePoint(), is(0x78));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(1));
-        assertThat(reader.getCurrentChar(), is('\uD83C'));
         assertThat(reader.getCurrentCodePoint(), is(0x1F341));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(3));
-        assertThat(reader.getCurrentChar(), is('y'));
         assertThat(reader.getCurrentCodePoint(), is(0x79));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(4));
@@ -163,31 +146,26 @@ public abstract class CharSequenceReaderContract {
 
     /**
      * Calls {@link CharSequenceReader#advance()} then {@link CharSequenceReader#rewind()} on a reader that is positioned at the
-     * start of a {@link CharSequence} and asserts that {@link CharSequenceReader#getCurrentPosition()},
-     * {@link CharSequenceReader#getCurrentChar()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct values
-     * after each call.
+     * start of a {@link CharSequence} and asserts that {@link CharSequenceReader#getCurrentPosition()} and
+     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values after each call.
      */
     @Test
     public void advanceRewind() {
         final CharSequenceReader<?> reader = this.createCharSequenceReader(BAR);
         assertThat(reader.getCurrentPosition(), is(0));
-        assertThat(reader.getCurrentChar(), is('b'));
         assertThat(reader.getCurrentCodePoint(), is(0x62));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(1));
-        assertThat(reader.getCurrentChar(), is('a'));
         assertThat(reader.getCurrentCodePoint(), is(0x61));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(0));
-        assertThat(reader.getCurrentChar(), is('b'));
         assertThat(reader.getCurrentCodePoint(), is(0x62));
     }
 
     /**
      * Calls {@link CharSequenceReader#rewind()} then {@link CharSequenceReader#advance()} on a reader that is positioned at the end
-     * of a {@link CharSequence} and asserts that {@link CharSequenceReader#getCurrentPosition()},
-     * {@link CharSequenceReader#getCurrentChar()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct values
-     * after each call.
+     * of a {@link CharSequence} and asserts that {@link CharSequenceReader#getCurrentPosition()} and
+     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values after each call.
      */
     @Test
     public void atEndRewindAdvance() {
@@ -196,7 +174,6 @@ public abstract class CharSequenceReaderContract {
         assertThat(reader.getCurrentCodePoint(), is(-1));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(2));
-        assertThat(reader.getCurrentChar(), is('r'));
         assertThat(reader.getCurrentCodePoint(), is(0x72));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(3));
@@ -205,9 +182,8 @@ public abstract class CharSequenceReaderContract {
 
     /**
      * Calls {@link CharSequenceReader#advance()} then {@link CharSequenceReader#rewind()} on a reader that is positioned before the
-     * start of a {@link CharSequence} and asserts that {@link CharSequenceReader#getCurrentPosition()},
-     * {@link CharSequenceReader#getCurrentChar()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct values
-     * after each call.
+     * start of a {@link CharSequence} and asserts that {@link CharSequenceReader#getCurrentPosition()} and
+     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values after each call.
      */
     @Test
     public void beforeStartAdvanceRewind() {
@@ -216,51 +192,10 @@ public abstract class CharSequenceReaderContract {
         assertThat(reader.getCurrentCodePoint(), is(-1));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(0));
-        assertThat(reader.getCurrentChar(), is('b'));
         assertThat(reader.getCurrentCodePoint(), is(0x62));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(-1));
         assertThat(reader.getCurrentCodePoint(), is(-1));
-    }
-
-    /**
-     * Tests that {@link CharSequenceReader#getCurrentChar()} throws a {@link NoSuchElementException} when the reader is positioned
-     * at the end of the sequence.
-     */
-    @Test(expected = NoSuchElementException.class)
-    public void getCurrentCharAtEnd() {
-        final CharSequenceReader<?> reader = this.createCharSequenceReader(FOO, 3);
-        reader.getCurrentChar();
-    }
-
-    /**
-     * Tests that {@link CharSequenceReader#getCurrentChar()} throws a {@link NoSuchElementException} when the reader is positioned
-     * before the start of the sequence.
-     */
-    @Test(expected = NoSuchElementException.class)
-    public void getCurrentCharBeforeStart() {
-        final CharSequenceReader<?> reader = this.createCharSequenceReader(FOO, -1);
-        reader.getCurrentChar();
-    }
-
-    /**
-     * Asserts that {@link CharSequenceReader#getCurrentChar()} returns the correct value when the reader is positioned on a BMP
-     * code point.
-     */
-    @Test
-    public void getCurrentCharBmp() {
-        final CharSequenceReader<?> reader = this.createCharSequenceReader(FOO);
-        assertThat(reader.getCurrentChar(), is('f'));
-    }
-
-    /**
-     * Asserts that {@link CharSequenceReader#getCurrentChar()} returns the correct value when the reader is positioned on a code
-     * point that is outside the BMP.
-     */
-    @Test
-    public void getCurrentCharNonBmp() {
-        final CharSequenceReader<?> reader = this.createCharSequenceReader("\uD83C\uDF41");
-        assertThat(reader.getCurrentChar(), is('\uD83C'));
     }
 
     /**
@@ -465,66 +400,55 @@ public abstract class CharSequenceReaderContract {
 
     /**
      * Calls {@link CharSequenceReader#rewind()} then {@link CharSequenceReader#advance()} on a reader that is positioned on the
-     * last code point of a {@link CharSequence} and asserts that {@link CharSequenceReader#getCurrentPosition()},
-     * {@link CharSequenceReader#getCurrentChar()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct values
-     * after each call.
+     * last code point of a {@link CharSequence} and asserts that {@link CharSequenceReader#getCurrentPosition()} and
+     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values after each call.
      */
     @Test
     public void rewindAdvance() {
         final CharSequenceReader<?> reader = this.createCharSequenceReader(BAR, 2);
         assertThat(reader.getCurrentPosition(), is(2));
-        assertThat(reader.getCurrentChar(), is('r'));
         assertThat(reader.getCurrentCodePoint(), is(0x72));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(1));
-        assertThat(reader.getCurrentChar(), is('a'));
         assertThat(reader.getCurrentCodePoint(), is(0x61));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(2));
-        assertThat(reader.getCurrentChar(), is('r'));
         assertThat(reader.getCurrentCodePoint(), is(0x72));
     }
 
     /**
      * Calls {@link CharSequenceReader#rewind()} then {@link CharSequenceReader#advance()} on a reader that is positioned at the
-     * start of a {@link CharSequence} and asserts that {@link CharSequenceReader#getCurrentPosition()},
-     * {@link CharSequenceReader#getCurrentChar()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct values
-     * after each call.
+     * start of a {@link CharSequence} and asserts that {@link CharSequenceReader#getCurrentPosition()} and
+     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values after each call.
      */
     @Test
     public void rewindBeforeStartAdvance() {
         final CharSequenceReader<?> reader = this.createCharSequenceReader(BAR);
         assertThat(reader.getCurrentPosition(), is(0));
-        assertThat(reader.getCurrentChar(), is('b'));
         assertThat(reader.getCurrentCodePoint(), is(0x62));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(-1));
         assertThat(reader.getCurrentCodePoint(), is(-1));
         reader.advance();
         assertThat(reader.getCurrentPosition(), is(0));
-        assertThat(reader.getCurrentChar(), is('b'));
         assertThat(reader.getCurrentCodePoint(), is(0x62));
     }
 
     /**
-     * Asserts that, following a call to {@link CharSequenceReader#rewind()}, {@link CharSequenceReader#getCurrentPosition()},
-     * {@link CharSequenceReader#getCurrentChar()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct values.
-     * The test is performed on a {@link CharSequence} containing only BMP code points and calls {@link CharSequenceReader#rewind()}
-     * multiple times.
+     * Asserts that, following a call to {@link CharSequenceReader#rewind()}, {@link CharSequenceReader#getCurrentPosition()} and
+     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values. The test is performed on a {@link CharSequence}
+     * containing only BMP code points and calls {@link CharSequenceReader#rewind()} multiple times.
      */
     @Test
     public void rewindBmp() {
         final CharSequenceReader<?> reader = this.createCharSequenceReader(BAR, 2);
         assertThat(reader.getCurrentPosition(), is(2));
-        assertThat(reader.getCurrentChar(), is('r'));
         assertThat(reader.getCurrentCodePoint(), is(0x72));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(1));
-        assertThat(reader.getCurrentChar(), is('a'));
         assertThat(reader.getCurrentCodePoint(), is(0x61));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(0));
-        assertThat(reader.getCurrentChar(), is('b'));
         assertThat(reader.getCurrentCodePoint(), is(0x62));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(-1));
@@ -535,24 +459,21 @@ public abstract class CharSequenceReaderContract {
     }
 
     /**
-     * Asserts that, following a call to {@link CharSequenceReader#rewind()}, {@link CharSequenceReader#getCurrentPosition()},
-     * {@link CharSequenceReader#getCurrentChar()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct values.
-     * The test is performed on a {@link CharSequence} containing a low surrogate that is not preceded by a high surrogate and calls
-     * {@link CharSequenceReader#rewind()} multiple times.
+     * Asserts that, following a call to {@link CharSequenceReader#rewind()}, {@link CharSequenceReader#getCurrentPosition()} and
+     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values. The test is performed on a {@link CharSequence}
+     * containing a low surrogate that is not preceded by a high surrogate and calls {@link CharSequenceReader#rewind()} multiple
+     * times.
      */
     @Test
     public void rewindBrokenSurrogate() {
         final CharSequenceReader<?> reader = this.createCharSequenceReader("x\uDF41y", 2);
         assertThat(reader.getCurrentPosition(), is(2));
-        assertThat(reader.getCurrentChar(), is('y'));
         assertThat(reader.getCurrentCodePoint(), is(0x79));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(1));
-        assertThat(reader.getCurrentChar(), is('\uDF41'));
         assertThat(reader.getCurrentCodePoint(), is(0xDF41));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(0));
-        assertThat(reader.getCurrentChar(), is('x'));
         assertThat(reader.getCurrentCodePoint(), is(0x78));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(-1));
@@ -563,20 +484,18 @@ public abstract class CharSequenceReaderContract {
     }
 
     /**
-     * Asserts that, following a call to {@link CharSequenceReader#rewind()}, {@link CharSequenceReader#getCurrentPosition()},
-     * {@link CharSequenceReader#getCurrentChar()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct values.
-     * The test is performed on a {@link CharSequence} containing a low surrogate that is not preceded by a high surrogate and calls
-     * {@link CharSequenceReader#rewind()} multiple times.
+     * Asserts that, following a call to {@link CharSequenceReader#rewind()}, {@link CharSequenceReader#getCurrentPosition()} and
+     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values. The test is performed on a {@link CharSequence}
+     * containing a low surrogate that is not preceded by a high surrogate and calls {@link CharSequenceReader#rewind()} multiple
+     * times.
      */
     @Test
     public void rewindBrokenSurrogateAtStart() {
         final CharSequenceReader<?> reader = this.createCharSequenceReader("\uDF41y", 1);
         assertThat(reader.getCurrentPosition(), is(1));
-        assertThat(reader.getCurrentChar(), is('y'));
         assertThat(reader.getCurrentCodePoint(), is(0x79));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(0));
-        assertThat(reader.getCurrentChar(), is('\uDF41'));
         assertThat(reader.getCurrentCodePoint(), is(0xDF41));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(-1));
@@ -600,24 +519,20 @@ public abstract class CharSequenceReaderContract {
     }
 
     /**
-     * Asserts that, following a call to {@link CharSequenceReader#rewind()}, {@link CharSequenceReader#getCurrentPosition()},
-     * {@link CharSequenceReader#getCurrentChar()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct values.
-     * The test is performed on a {@link CharSequence} containing a mix of BMP code points and non-BMP code points and calls
-     * {@link CharSequenceReader#rewind()} multiple times.
+     * Asserts that, following a call to {@link CharSequenceReader#rewind()}, {@link CharSequenceReader#getCurrentPosition()} and
+     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values. The test is performed on a {@link CharSequence}
+     * containing a mix of BMP code points and non-BMP code points and calls {@link CharSequenceReader#rewind()} multiple times.
      */
     @Test
     public void rewindNonBmp() {
         final CharSequenceReader<?> reader = this.createCharSequenceReader("x\uD83C\uDF41y", 3);
         assertThat(reader.getCurrentPosition(), is(3));
-        assertThat(reader.getCurrentChar(), is('y'));
         assertThat(reader.getCurrentCodePoint(), is(0x79));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(1));
-        assertThat(reader.getCurrentChar(), is('\uD83C'));
         assertThat(reader.getCurrentCodePoint(), is(0x1F341));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(0));
-        assertThat(reader.getCurrentChar(), is('x'));
         assertThat(reader.getCurrentCodePoint(), is(0x78));
         reader.rewind();
         assertThat(reader.getCurrentPosition(), is(-1));
@@ -629,15 +544,14 @@ public abstract class CharSequenceReaderContract {
 
     /**
      * Asserts that, following a call to {@link CharSequenceReader#setCurrentPosition(int)} with a position within the
-     * {@link CharSequence}, {@link CharSequenceReader#getCurrentPosition()}, {@link CharSequenceReader#getCurrentChar()} and
-     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values.
+     * {@link CharSequence}, {@link CharSequenceReader#getCurrentPosition()} and {@link CharSequenceReader#getCurrentCodePoint()}
+     * return the correct values.
      */
     @Test
     public void setCurrentPosition() {
         final CharSequenceReader<?> reader = this.createCharSequenceReader(FOO);
         reader.setCurrentPosition(2);
         assertThat(reader.getCurrentPosition(), is(2));
-        assertThat(reader.getCurrentChar(), is('o'));
         assertThat(reader.getCurrentCodePoint(), is(0x6F));
     }
 
@@ -669,15 +583,14 @@ public abstract class CharSequenceReaderContract {
 
     /**
      * Asserts that, following a call to {@link CharSequenceReader#setCurrentPosition(int)} with a position in the middle of a
-     * surrogate pair in the {@link CharSequence}, {@link CharSequenceReader#getCurrentPosition()},
-     * {@link CharSequenceReader#getCurrentChar()} and {@link CharSequenceReader#getCurrentCodePoint()} return the correct values.
+     * surrogate pair in the {@link CharSequence}, {@link CharSequenceReader#getCurrentPosition()} and
+     * {@link CharSequenceReader#getCurrentCodePoint()} return the correct values.
      */
     @Test
     public void setCurrentPositionInMiddleOfSurrogatePair() {
         final CharSequenceReader<?> reader = this.createCharSequenceReader("\uD83C\uDF41");
         reader.setCurrentPosition(1);
         assertThat(reader.getCurrentPosition(), is(1));
-        assertThat(reader.getCurrentChar(), is('\uDF41'));
         assertThat(reader.getCurrentCodePoint(), is(0xDF41));
     }
 
@@ -708,7 +621,7 @@ public abstract class CharSequenceReaderContract {
      *            the {@link CharSequence} to read from
      * @return a new {@link CharSequenceReader}
      */
-    protected abstract CharSequenceReader<?> createCharSequenceReader(CharSequence charSequence);
+    protected abstract CharSequenceReader<?> createCharSequenceReader(@Nonnull CharSequence charSequence);
 
     /**
      * Creates a {@link CharSequenceReader} for the specified {@link CharSequence} initially positioned at the specified position.
@@ -719,7 +632,8 @@ public abstract class CharSequenceReaderContract {
      *            the reader's initial position
      * @return a new {@link CharSequenceReader}
      */
-    protected CharSequenceReader<?> createCharSequenceReader(CharSequence charSequence, int position) {
+    @Nonnull
+    protected CharSequenceReader<?> createCharSequenceReader(@Nonnull CharSequence charSequence, int position) {
         final CharSequenceReader<?> reader = this.createCharSequenceReader(charSequence);
         reader.setCurrentPosition(position);
         return reader;
